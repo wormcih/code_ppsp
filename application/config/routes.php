@@ -38,8 +38,13 @@
 |
 */
 
-$route['default_controller'] = "pages/view";
-$route['(:any)'] = 'pages/view/$1';
+$route['default_controller'] = "taxi_controller/view";
+//$route['(:any)'] = 'pages/view/$1';
+// Debugger
+$route['debugger'] = 'debugger/view';
+$route['debugger/(:any)'] = 'debugger/view/$1';
+
+
 $route['404_override'] = '';
 
 
