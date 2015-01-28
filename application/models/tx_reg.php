@@ -1,8 +1,8 @@
 <?php
 
-// This is the model for accessing database of Taxi Express
+// This is the model for register account of Taxi Express
 
-class Taxi_db extends CI_Model {
+class Tx_reg extends CI_Model {
 
 	private $tables;
 	function __construct() {
@@ -16,21 +16,6 @@ class Taxi_db extends CI_Model {
 			'order' => 'tx_order',
 			'beta' => 'tx_drivers'
 			);
-	}
-
-	function get_driver($count = 10) {
-		/** Testing function with no use, will be removed */
-		$sql = 'SELECT * FROM '.$this -> tables['beta'];
-		$query = $this-> db -> query($sql);
-		return $query -> result();
-
-	}
-		
-	function list_table($table = 'order') {
-		/** This function return the table contents in array objects  */
-
-		$query = $this->db->get($this -> tables[$table]);
-		return $query -> result();
 	}
 
 	function add_user($user_name, $mobile_phone, $mobile_gcm, $mobile_uuid) {

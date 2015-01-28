@@ -38,8 +38,14 @@
 |
 */
 
-$route['default_controller'] = "taxi_controller/view";
+$route['default_controller'] = "tx_debug/load_all";
 //$route['(:any)'] = 'pages/view/$1';
+
+
+// Register
+$route['register'] = 'tx_account/register';
+$route['register/(:any)'] = 'tx_account/register/$1';
+
 // Debugger
 $route['debugger'] = 'debugger/view';
 $route['debugger/(:any)'] = 'debugger/view/$1';
