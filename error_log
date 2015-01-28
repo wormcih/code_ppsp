@@ -1,7 +1,0 @@
-[28-Jan-2015 16:52:11 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected '$sql_addition' (T_VARIABLE) in /home1/wormcihc/public_html/ppsp/application/models/taxi_db.php on line 67
-[28-Jan-2015 16:52:36 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected '$sql_addition' (T_VARIABLE) in /home1/wormcihc/public_html/ppsp/application/models/taxi_db.php on line 67
-[28-Jan-2015 16:55:45 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected ';' in /home1/wormcihc/public_html/ppsp/application/controllers/taxi_controller.php on line 26
-[28-Jan-2015 16:56:58 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected ';' in /home1/wormcihc/public_html/ppsp/application/controllers/taxi_controller.php on line 26
-[28-Jan-2015 20:46:13 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected 'array' (T_ARRAY) in /home1/wormcihc/public_html/ppsp/application/models/taxi_db.php on line 37
-[28-Jan-2015 21:43:52 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected ')' in /home1/wormcihc/public_html/ppsp/application/models/taxi_db.php on line 40
-[29-Jan-2015 00:02:13 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected end of file, expecting function (T_FUNCTION) in /home1/wormcihc/public_html/ppsp/application/controllers/tx_debug.php on line 14
