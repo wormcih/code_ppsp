@@ -6,6 +6,7 @@ class Taxi_db extends CI_Model {
 
 	private $tables;
 	function __construct() {
+		
 		parent::__construct();
 
 		/** Table name */
@@ -16,27 +17,33 @@ class Taxi_db extends CI_Model {
 			'order' => 'tx_order',
 			'beta' => 'tx_drivers'
 			);
+
 	}
 
 	function get_driver($count = 10) {
 		/** Testing function with no use, will be removed */
+		
 		$sql = 'SELECT * FROM '.$this -> tables['beta'];
 		$query = $this-> db -> query($sql);
+		
 		return $query -> result();
 
 	}
 		
 	function list_table($table = 'order') {
 		/** This function return the table contents in array objects  */
-
+		
 		$query = $this->db->get($this -> tables[$table]);
+		
 		return $query -> result();
+
 	}
 
 	function add_user($user_name, $mobile_phone, $mobile_gcm, $mobile_uuid) {
 		/** This function return true (Pass) if the user added in the database,
 			Otherwise, return false (Fail) 
 			require ALL parameters */
+
 		if (!($user_name)||!($mobile_phone)||!($mobile_gcm)||!($mobile_uuid)) return false;
 
 		// check duplicate of user name
@@ -52,16 +59,19 @@ class Taxi_db extends CI_Model {
 				$insert_query = $this -> db -> query($insert_sql, array($mobile_id, $user_name));
 				
 				return true;
+
 			}
 		} 
 
 		return false;
+
 	}
 
 	function add_taxi($taxi_carplate, $mobile_phone, $mobile_gcm, $mobile_uuid) {
 		/** This function return true (Pass) if the taxi added in the database,
 			Otherwise, return false (Fail) 
 			require ALL parameters */
+
 		if (!($taxi_carplate)||!($mobile_phone)||!($mobile_gcm)||!($mobile_uuid)) return false;
 
 		// check duplicate of taxi car plate
@@ -77,10 +87,12 @@ class Taxi_db extends CI_Model {
 				$insert_query = $this -> db -> query($insert_sql, array($mobile_id, $taxi_carplate));
 				
 				return true;
+
 			}
 		} 
 
 		return false;
+
 	}
 	
 	private function add_mobile($phone, $gcm, $uuid) {
@@ -94,15 +106,10 @@ class Taxi_db extends CI_Model {
 
 			return true;
 
-			$index_sql = 'SELECT mobile_id FROM tx_mobile WHERE mobile_phone = ?';
-			$index_query = $this-> db -> query($index_sql, array($phone));
-
-
-			return $index_query -> result()[0] -> mobile_id;
-			
 		} else {
 
 			return false;
+
 		}
 	}
 
@@ -110,6 +117,7 @@ class Taxi_db extends CI_Model {
 		/** This function return true (Pass) if the data not exists in the database with the input parameters,
 			Otherwise, return false (Fail) 
 			Accept array value(s) ONLY */
+
 		if (!is_array($keyval)) return false;
 
 		$check_sql = 'SELECT * FROM '.$this -> tables[$table_name].' WHERE ';
@@ -124,6 +132,7 @@ class Taxi_db extends CI_Model {
 		if (count($this -> db -> query($check_sql) -> result()) == 0) return true;
 
 		return false;
+
 	}
 
 }

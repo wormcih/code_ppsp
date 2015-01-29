@@ -2,7 +2,7 @@
 
 class Tx_account extends CI_Controller {
 	
-	public function register($method = 'user') {
+	public function register($method = 'none') {
 	/** Register controller:
 		allow user to register as user or taxi driver,
 		$method allows 'user' and 'taxi' parameters ONLY */
@@ -28,7 +28,9 @@ class Tx_account extends CI_Controller {
 			$data['arr']['taxi_reg'] = $this -> tx_reg -> add_taxi($taxi_carplate, $mobile_phone, $mobile_gcm, $mobile_uuid);
 
 		} else {
+
 			$data['arr']['error'] = 'no parameter received!';
+			
 		}
 
 		$this -> load -> view('output', $data);
