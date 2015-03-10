@@ -46,6 +46,9 @@ $route['default_controller'] = "tx_debug/load_all";
 $route['register'] = 'tx_account/register';
 $route['register/(:any)'] = 'tx_account/register/$1';
 
+// Update geolocation
+$route['update'] = 'tx_geolocation/update';
+
 // Debugger
 $route['debugger'] = 'debugger/view';
 $route['debugger/(:any)'] = 'debugger/view/$1';

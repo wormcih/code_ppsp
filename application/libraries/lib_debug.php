@@ -7,5 +7,11 @@ class Lib_debug {
 		return $CI -> router -> class;
 	}
 
+	private $error_msg = array(
+					'1': 'Not enough parameters',
+					'2': 'No data return',
+					'3': 'Parameters type no correct'
+				);
+
 
 }
