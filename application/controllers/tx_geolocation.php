@@ -12,15 +12,15 @@ class Tx_geolocation extends CI_Controller {
 		// receive POST request
 		$mobile = $this -> input -> post('mobile');
 		$latitude = $this -> input -> post('latitude');
-		$longtitute = $this -> input -> post('longtitute');
+		$longitude = $this -> input -> post('longitude');
 
-		if ($this -> tx_update -> update_location($mobile, $latitude, $longtitute)) {
+		if ($this -> tx_update -> update_location($mobile, $latitude, $longitude)) {
 			
-			$data['arr']['location_update'] = 'success';
+			$data['arr']['location_update'] = true;
 
 		} else {
 
-			$data['arr']['error'] = 'Cannot update location!';
+			$data['arr']['location_update'] = false;
 
 		}
 

@@ -8,8 +8,8 @@ class Tx_update extends CI_Model {
 		parent::__construct();
 	}
 
-	function update_location($mobile, $latitude, $longtitute) {
-		if (!$mobile || !$latitude || !$longtitute) return false;
+	function update_location($mobile, $latitude, $longitude) {
+		if (!$mobile || !$latitude || !$longitude) return false;
 
 		// check mobile exist
 		$check_sql = 'SELECT mobile_id FROM tx_mobile WHERE mobile_phone = ?';
@@ -21,7 +21,7 @@ class Tx_update extends CI_Model {
 		// perform a geolocation update, alivetime (void time) changes to current time + 5 min
 		$update_id = $check_result[0] -> mobile_id;
 		$update_sql = 'UPDATE tx_mobile SET mobile_latitude = ?, mobile_longitude = ?, mobile_alivetime = now() + INTERVAL 5 MINUTE WHERE mobile_id = ?';
-		$update_query = $this -> db -> query($update_sql, array($latitude, $longtitute, $update_id));
+		$update_query = $this -> db -> query($update_sql, array($latitude, $longitude, $update_id));
 
 		return true;
 

@@ -23,6 +23,7 @@ CREATE TABLE tx_taxi(
 	taxi_id INT NOT NULL AUTO_INCREMENT,
 	user_id INT NOT NULL,
 	mobile_id INT NOT NULL,
+	taxi_type INT NOT NULL,
 	taxi_carplate VARCHAR(20) NOT NULL,
 	taxi_available TINYINT(1) DEFAULT 0,
 	PRIMARY KEY (taxi_id),
