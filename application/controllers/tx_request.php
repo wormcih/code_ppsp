@@ -38,7 +38,7 @@ class Tx_request extends CI_Controller {
 
 			} else {
 
-				$this->gcm->addRecepient($gcm);
+				$this->gcm->addRecepient($gcm_list);
 
 			}
 
