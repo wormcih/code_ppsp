@@ -1,8 +1,8 @@
 <?php
 
-// This is the model for register account of Taxi Express
+// This is the model for order process of Taxi Express
 
-class Tx_list extends CI_Model {
+class Tx_order extends CI_Model {
 
 	private $tables;
 	function __construct() {
@@ -62,5 +62,22 @@ class Tx_list extends CI_Model {
 
 	}
 
+	function create_order($user_id, $order_location, $order_destination) {
+
+
+
+		$create_sql = 'INSERT INTO tx_order(user_id, order_location, order_destination) values (?, ?, ?)';
+		$create_query = $this -> db -> query($create_sql, array($user_id, $order_location, $order_destination));
+
+
+	}
+
+	function confirm_order($taxi_id, $order_id) {
+
+	}
+
+	function cancel_order($order_id) {
+		
+	}
 
 }

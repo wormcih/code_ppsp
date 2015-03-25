@@ -5,9 +5,9 @@
 class Tx_request extends CI_Controller {
 
 	public function order() {
-		$this -> load -> model('tx_list');
+		$this -> load -> model('tx_order');
 
-		$data['arr']['output'] = $this -> tx_list -> list_availabletaxi(26);
+		$data['arr']['output'] = $this -> tx_order -> list_availabletaxi(26);
 
 		$this -> load -> view('output', $data);
 
@@ -17,29 +17,18 @@ class Tx_request extends CI_Controller {
 
 		// load gcm library
 		$this -> load -> library('gcm');
-
 		$this->gcm->setMessage('Test message '.date('d.m.Y H:s:i'));
-
 		$gcm_list = $user_name = $this -> input -> post('gcm');
 
 		if (!$gcm_list) {
-
 			$data['arr']['output'] = "gcm send fail, probably code failure, or server problems";
-
 		} else {
-
 			if (is_array($gcm_list)) {
-
 				foreach ($gcm_list as $gcm) {
-
 					$this->gcm->addRecepient($gcm);
-
 				}
-
 			} else {
-
 				$this->gcm->addRecepient($gcm_list);
-
 			}
 
 			$this->gcm->setData(array('status' => 'testing'));
