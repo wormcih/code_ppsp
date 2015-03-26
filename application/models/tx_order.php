@@ -62,22 +62,89 @@ class Tx_order extends CI_Model {
 
 	}
 
-	function create_order($user_id, $order_location, $order_destination) {
+	function create_order($mobile_phone, $order_location, $order_destination) {
 
+		$mobile_id = $this -> get_mobileid($mobile_phone);
+		$user_id = $this -> get_roleid($mobile_id, 'user_id');
 
+		if ($this -> check_existorder($user_id)) return false;
 
 		$create_sql = 'INSERT INTO tx_order(user_id, order_location, order_destination) values (?, ?, ?)';
 		$create_query = $this -> db -> query($create_sql, array($user_id, $order_location, $order_destination));
+		$order_id = $this -> db -> insert_id();
 
+		return $order_id;
 
 	}
 
-	function confirm_order($taxi_id, $order_id) {
+
+	function check_existorder($user_id) {
+
+		/* return true if order exist */
+
+		if (!$user_id) return true;
+
+		$check_sql = 'SELECT order_id FROM tx_order WHERE taxi_id IS NULL AND order_time > now() - INTERVAL 5 MINUTE AND order_alive = 1 AND user_id = ?';
+		$check_query = $this -> db -> query($check_sql, array($user_id));
+
+		$check_result = $check_query -> result();
+
+		if (count($check_result) == 0) {
+			return false;
+		}
+
+		return true;
+
+	}
+
+	function confirm_order($mobile_phone, $order_id) {
 
 	}
 
 	function cancel_order($order_id) {
 		
+	}
+
+
+	function get_roleid($mobile_id, $user_type) {
+
+		if (!$user_type || !$mobile_id) return false;
+
+		if ($user_type == 'user_id') {
+			$role_sql = 'SELECT user_id AS id FROM `tx_user` WHERE mobile_id = ?';
+
+		} elseif ($user_type == 'taxi_id') {
+			$role_sql = 'SELECT taxi_id AS id FROM `tx_taxi` WHERE mobile_id = ?';
+
+		} else {
+			return false;
+
+		}
+
+		$mobile_query = $this -> db -> query($role_sql, array($mobile_id));
+		$mobile_result = $mobile_query -> result();
+
+		if (count($mobile_result) > 0) {
+			return $mobile_result[0] -> id;
+		}
+
+		return false;
+	}
+
+	function get_mobileid($mobile) {
+
+		if (!$mobile) return false;
+
+		$mobile_sql = 'SELECT mobile_id FROM `tx_mobile` WHERE mobile_phone = ?';
+		$mobile_query = $this -> db -> query($mobile_sql, array($mobile));
+		
+		$mobile_result = $mobile_query -> result();
+
+		if (count($mobile_result) > 0) {
+			return $mobile_result[0] -> mobile_id;
+		}
+
+		return false;
 	}
 
 }

@@ -53,6 +53,8 @@ $route['update'] = 'tx_geolocation/update';
 $route['request'] = 'tx_request/order';
 $route['gcm'] = 'tx_request/send_gcm';
 
+$route['test'] = 'tx_debug/testcase';
+
 // Debugger
 $route['debugger'] = 'debugger/view';
 $route['debugger/(:any)'] = 'debugger/view/$1';

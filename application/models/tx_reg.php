@@ -68,14 +68,14 @@ class Tx_reg extends CI_Model {
 		return false;
 	}
 	
-	private function add_mobile($phone, $gcm, $uuid) {
+	private function add_mobile($phone, $gcm) {
 		/** This function return true if mobile information are inserted.  
 			Otherwise, return false */
 
 		if ($this -> check_duplicate('mobile', array('mobile_phone' => $phone))) {
 
-			$insert_sql = 'INSERT INTO tx_mobile(mobile_phone, mobile_gcm, mobile_uuid) VALUES (?, ?, ?)';
-			$insert_query = $this-> db -> query($insert_sql, array($phone, $gcm, $uuid));
+			$insert_sql = 'INSERT INTO tx_mobile(mobile_phone, mobile_gcm) VALUES (?, ?)';
+			$insert_query = $this-> db -> query($insert_sql, array($phone, $gcm));
 
 			return true;
 

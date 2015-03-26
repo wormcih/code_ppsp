@@ -14,4 +14,12 @@ class Tx_debug extends CI_Controller {
 		$this -> load -> view('output', $data);
 
 	}
+
+	public function testcase() {
+		$this -> load -> model('tx_order');
+		$data['arr']['result'] = $this -> tx_order -> create_order('63265487', '1', '2');
+
+		$this -> load -> view('output', $data);
+
+	}
 }
