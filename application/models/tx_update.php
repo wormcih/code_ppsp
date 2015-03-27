@@ -27,5 +27,10 @@ class Tx_update extends CI_Model {
 
 	}
 
+	function clear_timeoutorder() {
+		$check_sql = 'UPDATE tx_order SET order_alive = 0 WHERE order_time <= now() - INTERVAL 5 MINUTE';
+		$check_query = $this -> db -> query($check_sql);
+	}
+
 
 }

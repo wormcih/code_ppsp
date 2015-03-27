@@ -49,16 +49,25 @@ $route['register/(:any)'] = 'tx_account/register/$1';
 // Update geolocation
 $route['update'] = 'tx_geolocation/update';
 
+// Order status of user
+$route['order_status'] = 'tx_request/order_status';
+
 // Request for a taxi
 $route['request'] = 'tx_request/order';
 
 // Confirm order by taxi
 $route['confirm'] = 'tx_request/confirm_order';
 
+$route['complete'] = 'tx_request/release_user';
+
 
 $route['gcm'] = 'tx_request/send_gcm';
 
 $route['test'] = 'tx_debug/testcase';
+
+// Reset db
+$route['reset'] = 'tx_debug/reset';
+
 
 // Debugger
 $route['debugger'] = 'debugger/view';

@@ -38,9 +38,9 @@ class Tx_order extends CI_Model {
 					as distance FROM `tx_mobile` as mobile
 					INNER JOIN `tx_taxi` as taxi
 					ON taxi.mobile_id = mobile.mobile_id
-					WHERE taxi.taxi_available = 1
+					WHERE taxi.taxi_available = 1 AND mobile.mobile_id != ?
 					having distance <= ?';
-		$list_escape = array($user_location['latitude'], $user_location['latitude'], $user_location['longitude'], $distance);
+		$list_escape = array($user_location['latitude'], $user_location['latitude'], $user_location['longitude'], $mobile_id, $distance);
 		$list_query = $this -> db -> query($list_sql, $list_escape);
 
 		return $list_query -> result();
@@ -65,7 +65,7 @@ class Tx_order extends CI_Model {
 	function create_order($mobile_phone, $order_location, $order_destination) {
 
 		$mobile_id = $this -> get_mobileid($mobile_phone);
-		$user_id = $this -> get_roleid($mobile_id, 'user_id');
+		$user_id = $this -> get_roleid($mobile_id, 'user_id', true);
 
 		if ($this -> check_existorder($user_id)) return false;
 
@@ -112,6 +112,18 @@ class Tx_order extends CI_Model {
 
 	}
 
+	function check_orderusers($order_id) {
+		// return array(user_id, taxi_id) of a order
+		$user_sql = 'SELECT user_id, taxi_id FROM tx_order WHERE order_id = ?';
+		$user_query = $this -> db -> query($user_sql, array($order_id));
+		$user_result = $user_query -> result_array();
+
+		if (count($user_result) == 0) return false;
+		
+		return array($user_result[0]['user_id'], $user_result[0]['taxi_id']);
+
+	}
+
 	function confirm_order($mobile_phone, $order_id) {
 
 		if (!$mobile_phone || !$order_id) return false;
@@ -125,6 +137,13 @@ class Tx_order extends CI_Model {
 			$comfirm_sql = 'UPDATE `tx_order` SET taxi_id = ?, order_alive = 0 WHERE order_id = ?';
 			$confirm_query = $this -> db -> query($comfirm_sql, array($taxi_id, $order_id));
 
+
+			$user_array = $this -> check_orderusers($order_id);
+			$user_sql = 'UPDATE `tx_user` SET user_available = 0 WHERE user_id = ?';
+			$taxi_sql = 'UPDATE `tx_taxi` SET taxi_available = 0 WHERE taxi_id = ?';
+			$user_query = $this -> db -> query($user_sql, array($user_array[0]));
+			$taxi_query = $this -> db -> query($taxi_sql, array($user_array[1]));
+
 			return true;
 		}
 
@@ -132,20 +151,35 @@ class Tx_order extends CI_Model {
 
 	}
 
-	function cancel_order($order_id) {
-		
+	function release_users($order_id) {
+		if (!$order_id) return false;
+		$user_array = $this -> check_orderusers($order_id);
+
+		if ($user_array[0] != null) {
+			$user_sql = 'UPDATE `tx_user` SET user_available = 1 WHERE user_id = ?';
+			$user_query = $this -> db -> query($user_sql, array($user_array[0]));
+		}
+
+		if ($user_array[1] != null) {
+			$taxi_sql = 'UPDATE `tx_taxi` SET taxi_available = 1 WHERE taxi_id = ?';
+			$user_query = $this -> db -> query($taxi_sql, array($user_array[1]));
+		}
+
+		return true;
+
 	}
 
-
-	function get_roleid($mobile_id, $user_type) {
+	function get_roleid($mobile_id, $user_type, $check_available = false) {
 
 		if (!$user_type || !$mobile_id) return false;
 
 		if ($user_type == 'user_id') {
-			$role_sql = 'SELECT user_id AS id FROM `tx_user` WHERE mobile_id = ?';
+			if (!$check_available) $role_sql = 'SELECT user_id AS id FROM `tx_user` WHERE mobile_id = ?';
+			else $role_sql = 'SELECT user_id AS id FROM `tx_user` WHERE mobile_id = ? AND user_available = 1';
 
 		} elseif ($user_type == 'taxi_id') {
-			$role_sql = 'SELECT taxi_id AS id FROM `tx_taxi` WHERE mobile_id = ?';
+			if (!$check_available) $role_sql = 'SELECT taxi_id AS id FROM `tx_taxi` WHERE mobile_id = ?';
+			else $role_sql = 'SELECT taxi_id AS id FROM `tx_taxi` WHERE mobile_id = ? AND taxi_available = 1';
 
 		} else {
 			return false;
@@ -173,6 +207,30 @@ class Tx_order extends CI_Model {
 
 		if (count($mobile_result) > 0) {
 			return $mobile_result[0] -> mobile_id;
+		}
+
+		return false;
+	}
+
+	function get_orderid($roleid, $user_type) {
+		if (!$roleid || !$user_type) return false;
+
+		if ($user_type == 'user_id') {
+			$role_sql = 'SELECT order_id AS id FROM `tx_order` WHERE user_id = ? ORDER BY order_time DESC LIMIT 1';
+
+		} elseif ($user_type == 'taxi_id') {
+			$role_sql = 'SELECT order_id AS id FROM `tx_order` WHERE taxi_id = ? ORDER BY order_time DESC LIMIT 1';
+
+		} else {
+			return false;
+
+		}
+
+		$mobile_query = $this -> db -> query($role_sql, array($mobile_id));
+		$mobile_result = $mobile_query -> result();
+
+		if (count($mobile_result) > 0) {
+			return $mobile_result[0] -> id;
 		}
 
 		return false;

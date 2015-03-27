@@ -17,6 +17,8 @@ class Tx_request extends CI_Controller {
 		$latitude = $this -> input -> post('latitude');
 		$longitude = $this -> input -> post('longitude');
 
+		$this -> tx_update -> clear_timeoutorder();
+
 		$order_id = false;
 
 		// force update current location
@@ -41,6 +43,34 @@ class Tx_request extends CI_Controller {
 
 	}
 
+	public function order_status() {
+		$this -> load -> model('tx_order');
+		$this -> load -> model('tx_update');
+
+		$this -> tx_update -> clear_timeoutorder();
+
+		$mobile_phone = $this -> input -> post('mobile_phone');
+		if ($mobile_phone) {
+
+			$mobile_id = $this -> tx_order -> get_mobileid($mobile_phone);
+			$user_id = $this -> tx_order -> get_roleid($mobile_id, 'user_id');
+
+			if ($user_id) {
+				$data['arr']['order_status'] = $this -> tx_order -> check_existorder($user_id);
+			
+			} else {
+				$data['arr']['order_status'] = false;
+
+			}
+
+		} else {
+			$data['arr']['order_status'] = false;
+
+		}
+
+		$this -> load -> view('output', $data);
+
+	}
 
 	public function confirm_order() {
 		$this -> load -> model('tx_order');
@@ -49,6 +79,17 @@ class Tx_request extends CI_Controller {
 		$order_id = $this -> input -> post('order_id');
 
 		$data['arr']['confirm'] = $this -> tx_order -> confirm_order($mobile_phone, $order_id);
+
+		$this -> load -> view('output', $data);
+
+	}
+
+	public function release_user() {
+		$this -> load -> model('tx_order');
+
+		$order_id = $this -> input -> post('order_id');
+
+		$data['arr']['release'] = $this -> tx_order -> release_users($order_id);
 
 		$this -> load -> view('output', $data);
 

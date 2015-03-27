@@ -30,4 +30,14 @@ class Tx_debug extends CI_Controller {
 		$this -> load -> view('output', $data);
 
 	}
+
+	public function reset() {
+		$this -> load -> model('tx_reset');
+		$data['arr']['remove_db'] = $this -> tx_reset -> remove_db();
+		$data['arr']['build_db'] = $this -> tx_reset -> build_db();
+		$data['arr']['dummy_data'] = $this -> tx_reset -> load_dummydata();
+
+		$this -> load -> view('output', $data);
+	}
+
 }
