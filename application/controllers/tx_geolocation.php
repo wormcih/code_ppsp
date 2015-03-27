@@ -10,11 +10,11 @@ class Tx_geolocation extends CI_Controller {
 		$this -> load -> model('tx_update');
 
 		// receive POST request
-		$mobile = $this -> input -> post('mobile');
+		$mobile_uuid = $this -> input -> post('mobile_uuid');
 		$latitude = $this -> input -> post('latitude');
 		$longitude = $this -> input -> post('longitude');
 
-		if ($this -> tx_update -> update_location($mobile, $latitude, $longitude)) {
+		if ($this -> tx_update -> update_location($mobile_uuid, $latitude, $longitude)) {
 			
 			$data['arr']['location_update'] = true;
 

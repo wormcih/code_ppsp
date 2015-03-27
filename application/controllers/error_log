@@ -1,2 +1,1 @@
-[27-Mar-2015 14:43:55 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected '$this' (T_VARIABLE), expecting function (T_FUNCTION) in /home1/wormcihc/public_html/ppsp/application/controllers/tx_request.php on line 60
-[27-Mar-2015 14:45:41 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected '}' in /home1/wormcihc/public_html/ppsp/application/controllers/tx_request.php on line 96
+[27-Mar-2015 21:11:16 Asia/Hong_Kong] PHP Parse error:  syntax error, unexpected ',' in /home1/wormcihc/public_html/ppsp/application/controllers/tx_request.php on line 69

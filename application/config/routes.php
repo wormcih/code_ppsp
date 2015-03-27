@@ -51,6 +51,11 @@ $route['update'] = 'tx_geolocation/update';
 
 // Request for a taxi
 $route['request'] = 'tx_request/order';
+
+// Confirm order by taxi
+$route['confirm'] = 'tx_request/confirm_order';
+
+
 $route['gcm'] = 'tx_request/send_gcm';
 
 $route['test'] = 'tx_debug/testcase';

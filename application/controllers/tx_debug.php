@@ -17,8 +17,15 @@ class Tx_debug extends CI_Controller {
 
 	public function testcase() {
 		$this -> load -> model('tx_order');
-		//$data['arr']['result'] = $this -> tx_order -> create_order('63265487', '1', '2');
-		$data['arr']['result'] = $this -> tx_order -> get_roleid('50', 'taxi_id');
+		
+		// Create Order
+		$data['arr']['result'] = $this -> tx_order -> create_order('63265487', '1', '2');
+
+		// Get user_id/taxi_id by mobile_id
+		//$data['arr']['result'] = $this -> tx_order -> get_roleid('50', 'taxi_id');
+
+		// Confirm order by taxi mobile_phone and order_id
+		//$data['arr']['result'] = $this -> tx_order -> confirm_order('23382338', 1);
 
 		$this -> load -> view('output', $data);
 

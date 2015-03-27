@@ -47,14 +47,6 @@ class Tx_order extends CI_Model {
 
 	}
 
-	function list_taxigcm($taxi_list) {
-		$list_array = array();
-		foreach ($taxi_list as $obj) {
-			array_push($list_array, $obj -> mobile_gcm);
-		}
-
-	}
-
 	private function get_geolocation($mobile_id) {
 		/** return array of the latitude and 
 			longitude of mobile device. */
@@ -70,9 +62,9 @@ class Tx_order extends CI_Model {
 
 	}
 
-	function create_order($mobile_phone, $order_location, $order_destination) {
+	function create_order($mobile_uuid, $order_location, $order_destination) {
 
-		$mobile_id = $this -> get_mobileid($mobile_phone);
+		$mobile_id = $this -> get_mobileid($mobile_uuid);
 		$user_id = $this -> get_roleid($mobile_id, 'user_id');
 
 		if ($this -> check_existorder($user_id)) return false;
@@ -107,8 +99,37 @@ class Tx_order extends CI_Model {
 
 	}
 
-	function confirm_order($mobile_phone, $order_id) {
-		
+	function check_orderstatus($order_id) {
+		$status_sql = 'SELECT * FROM tx_order WHERE order_id = ? AND taxi_id IS NULL AND order_time > now() - INTERVAL 5 MINUTE AND order_alive = 1';
+		$status_query = $this -> db -> query($status_sql, array($order_id));
+		$status_result = $status_query -> result();
+
+		if (count($status_result) > 0) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	function confirm_order($mobile_uuid, $order_id) {
+
+		if (!$mobile_uuid || !$order_id) return false;
+
+		$mobile_id = $this -> get_mobileid($mobile_uuid);
+		$taxi_id = $this -> get_roleid($mobile_id, 'taxi_id');
+
+		if (!$taxi_id) return false;
+
+		if ($this -> check_orderstatus($order_id)) {
+			$comfirm_sql = 'UPDATE `tx_order` SET taxi_id = ?, order_alive = 0 WHERE order_id = ?';
+			$confirm_query = $this -> db -> query($comfirm_sql, array($taxi_id, $order_id));
+
+			return true;
+		}
+
+		return false;
+
 	}
 
 	function cancel_order($order_id) {
@@ -141,12 +162,12 @@ class Tx_order extends CI_Model {
 		return false;
 	}
 
-	function get_mobileid($mobile_phone) {
+	function get_mobileid($mobile_uuid) {
 
-		if (!$mobile_phone) return false;
+		if (!$mobile_uuid) return false;
 
-		$mobile_sql = 'SELECT mobile_id FROM `tx_mobile` WHERE mobile_phone = ?';
-		$mobile_query = $this -> db -> query($mobile_sql, array($mobile_phone));
+		$mobile_sql = 'SELECT mobile_id FROM `tx_mobile` WHERE mobile_uuid = ?';
+		$mobile_query = $this -> db -> query($mobile_sql, array($mobile_uuid));
 		
 		$mobile_result = $mobile_query -> result();
 
