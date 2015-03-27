@@ -99,8 +99,11 @@ class Tx_order extends CI_Model {
 
 	}
 
-	function check_orderstatus($order_id) {
+	function check_orderstatus($order_id, $timeout = true) {
+		if ($timeout)
 		$status_sql = 'SELECT * FROM tx_order WHERE order_id = ? AND taxi_id IS NULL AND order_time > now() - INTERVAL 5 MINUTE AND order_alive = 1';
+		else
+		$status_sql = 'SELECT * FROM tx_order WHERE order_id = ? AND taxi_id IS NULL AND order_alive = 1';
 		$status_query = $this -> db -> query($status_sql, array($order_id));
 		$status_result = $status_query -> result();
 
@@ -216,21 +219,21 @@ class Tx_order extends CI_Model {
 		if (!$roleid || !$user_type) return false;
 
 		if ($user_type == 'user_id') {
-			$role_sql = 'SELECT order_id AS id FROM `tx_order` WHERE user_id = ? ORDER BY order_time DESC LIMIT 1';
+			$role_sql = 'SELECT order_id FROM `tx_order` WHERE user_id = ? ORDER BY order_time DESC LIMIT 1';
 
 		} elseif ($user_type == 'taxi_id') {
-			$role_sql = 'SELECT order_id AS id FROM `tx_order` WHERE taxi_id = ? ORDER BY order_time DESC LIMIT 1';
+			$role_sql = 'SELECT order_id FROM `tx_order` WHERE taxi_id = ? ORDER BY order_time DESC LIMIT 1';
 
 		} else {
 			return false;
 
 		}
 
-		$mobile_query = $this -> db -> query($role_sql, array($mobile_id));
-		$mobile_result = $mobile_query -> result();
+		$role_query = $this -> db -> query($role_sql, array($roleid));
+		$role_result = $role_query -> result();
 
-		if (count($mobile_result) > 0) {
-			return $mobile_result[0] -> id;
+		if (count($role_result) > 0) {
+			return $role_result[0] -> order_id;
 		}
 
 		return false;

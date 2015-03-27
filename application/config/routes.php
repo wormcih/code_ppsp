@@ -57,12 +57,13 @@ $route['request'] = 'tx_request/order';
 
 // Confirm order by taxi
 $route['confirm'] = 'tx_request/confirm_order';
-
 $route['complete'] = 'tx_request/release_user';
 
+// Check order_id
+$route['order/(:any)'] = 'tx_request/get_orderid/$1';
 
+// testing code
 $route['gcm'] = 'tx_request/send_gcm';
-
 $route['test'] = 'tx_debug/testcase';
 
 // Reset db

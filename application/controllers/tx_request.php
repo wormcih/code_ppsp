@@ -29,11 +29,11 @@ class Tx_request extends CI_Controller {
 				$taxi_list = $this -> tx_order -> list_availabletaxi($this -> tx_order -> get_mobileid($mobile_phone));
 				$gcm_list = $this -> list_taxigcm($taxi_list);
 				$gcm_data = $this -> list_gcmsenddata($taxi_list);
-				$data['arr']['gcm_list'] = $gcm_list;
 				$data['arr']['taxi_count'] = count($gcm_list);
 
 				$gcm_data = array('order_id' => $order_id, 'order_location' => $order_location, 'order_destination' => $order_destination);
-				$data['arr']['gcm_data'] = $this -> send_gcm($gcm_list, $gcm_data);
+				$data['arr']['gcm_data'] = $gcm_data;
+				$data['arr']['gcm_success'] = $this -> send_gcm($gcm_list, $gcm_data);
 
 			}
 		}
@@ -95,6 +95,23 @@ class Tx_request extends CI_Controller {
 
 	}
 
+	public function get_orderid($user = 'none') {
+		if ($user == 'user' || $user = 'taxi') {
+			$this -> load -> model('tx_order');
+
+			$user_array = array('user' => 'user_id', 'taxi' => 'taxi_id');
+
+			if ($user == 'user') $roleid = $this -> input -> post('user_id');
+			else $roleid = $this -> input -> post('taxi_id');
+
+			$data['arr']['order_id'] = $this -> tx_order -> get_orderid($roleid, $user_array[$user]);
+
+		} else $data['arr']['order_id'] = false;
+
+		$this -> load -> view('output', $data);
+
+	}
+
 	private function list_taxigcm($taxi_list) {
 		$list_array = array();
 		foreach ($taxi_list as $obj) {
@@ -131,11 +148,17 @@ class Tx_request extends CI_Controller {
 
 		if (!$gcm_list) return false;
 
-		foreach ($gcm_list as $gcm) {
-			$this -> gcm -> addRecepient($gcm);
-		}
+			if (is_array($gcm_list)) {
+				foreach ($gcm_list as $gcm) {
+					$this -> gcm -> addRecepient($gcm);
+				}
 
-		$this -> gcm -> setData($gcm_data);
+			} else {
+ 				$this -> gcm -> addRecepient($gcm);
+ 			}
+
+		//$this -> gcm -> setData($gcm_data);
+		$this -> gcm -> setData(array('hello' => 'sun'));
 
 	    /*if ($this -> gcm -> send())
 	        return 'Success for all messages, status => testing';
@@ -143,9 +166,9 @@ class Tx_request extends CI_Controller {
 	    else
 	        return 'Some messages have errors';
 		*/
-	    $this -> gcm -> send();
+  		$gcm_send = $this -> gcm -> send();
 
-  		return $gcm_data;
+  		return $this->gcm->status;
 
     }
 
