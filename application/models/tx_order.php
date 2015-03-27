@@ -47,6 +47,14 @@ class Tx_order extends CI_Model {
 
 	}
 
+	function list_taxigcm($taxi_list) {
+		$list_array = array();
+		foreach ($taxi_list as $obj) {
+			array_push($list_array, $obj -> mobile_gcm);
+		}
+
+	}
+
 	private function get_geolocation($mobile_id) {
 		/** return array of the latitude and 
 			longitude of mobile device. */
@@ -73,6 +81,8 @@ class Tx_order extends CI_Model {
 		$create_query = $this -> db -> query($create_sql, array($user_id, $order_location, $order_destination));
 		$order_id = $this -> db -> insert_id();
 
+		$this -> list_availabletaxi($mobile_id);
+
 		return $order_id;
 
 	}
@@ -98,7 +108,7 @@ class Tx_order extends CI_Model {
 	}
 
 	function confirm_order($mobile_phone, $order_id) {
-
+		
 	}
 
 	function cancel_order($order_id) {
@@ -131,12 +141,12 @@ class Tx_order extends CI_Model {
 		return false;
 	}
 
-	function get_mobileid($mobile) {
+	function get_mobileid($mobile_phone) {
 
-		if (!$mobile) return false;
+		if (!$mobile_phone) return false;
 
 		$mobile_sql = 'SELECT mobile_id FROM `tx_mobile` WHERE mobile_phone = ?';
-		$mobile_query = $this -> db -> query($mobile_sql, array($mobile));
+		$mobile_query = $this -> db -> query($mobile_sql, array($mobile_phone));
 		
 		$mobile_result = $mobile_query -> result();
 

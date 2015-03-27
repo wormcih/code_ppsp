@@ -8,12 +8,12 @@ class Tx_update extends CI_Model {
 		parent::__construct();
 	}
 
-	function update_location($mobile, $latitude, $longitude) {
-		if (!$mobile || !$latitude || !$longitude) return false;
+	function update_location($mobile_phone, $latitude, $longitude) {
+		if (!$mobile_phone || !$latitude || !$longitude) return false;
 
 		// check mobile exist
 		$check_sql = 'SELECT mobile_id FROM tx_mobile WHERE mobile_phone = ?';
-		$check_query = $this -> db -> query($check_sql, array($mobile));
+		$check_query = $this -> db -> query($check_sql, array($mobile_phone));
 		$check_result = $check_query -> result();
 		// if no matched query, return false
 		if (count($check_result) == 0) return false;
