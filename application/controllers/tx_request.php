@@ -10,7 +10,7 @@ class Tx_request extends CI_Controller {
 
 		//$data['arr']['output'] = $this -> tx_order -> list_availabletaxi(26);
 
-		$mobile_uuid = $this -> input -> post('mobile_uuid');
+		$mobile_phone = $this -> input -> post('mobile_phone');
 		$order_location = $this -> input -> post('order_location');
 		$order_destination = $this -> input -> post('order_destination');
 
@@ -20,11 +20,11 @@ class Tx_request extends CI_Controller {
 		$order_id = false;
 
 		// force update current location
-		if ($this -> tx_update -> update_location($mobile_uuid, $latitude, $longitude)) {
-			$order_id = $this -> tx_order -> create_order($mobile_uuid, $order_location, $order_destination);
+		if ($this -> tx_update -> update_location($mobile_phone, $latitude, $longitude)) {
+			$order_id = $this -> tx_order -> create_order($mobile_phone, $order_location, $order_destination);
 			
 			if ($order_id) {
-				$taxi_list = $this -> tx_order -> list_availabletaxi($this -> tx_order -> get_mobileid($mobile_uuid));
+				$taxi_list = $this -> tx_order -> list_availabletaxi($this -> tx_order -> get_mobileid($mobile_phone));
 				$gcm_list = $this -> list_taxigcm($taxi_list);
 				$gcm_data = $this -> list_gcmsenddata($taxi_list);
 				$data['arr']['gcm_list'] = $gcm_list;
@@ -45,10 +45,10 @@ class Tx_request extends CI_Controller {
 	public function confirm_order() {
 		$this -> load -> model('tx_order');
 
-		$mobile_uuid = $this -> input -> post('mobile_uuid');
+		$mobile_phone = $this -> input -> post('mobile_phone');
 		$order_id = $this -> input -> post('order_id');
 
-		$data['arr']['confirm'] = $this -> tx_order -> confirm_order($mobile_uuid, $order_id);
+		$data['arr']['confirm'] = $this -> tx_order -> confirm_order($mobile_phone, $order_id);
 
 		$this -> load -> view('output', $data);
 

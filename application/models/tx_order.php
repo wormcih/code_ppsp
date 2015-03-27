@@ -62,9 +62,9 @@ class Tx_order extends CI_Model {
 
 	}
 
-	function create_order($mobile_uuid, $order_location, $order_destination) {
+	function create_order($mobile_phone, $order_location, $order_destination) {
 
-		$mobile_id = $this -> get_mobileid($mobile_uuid);
+		$mobile_id = $this -> get_mobileid($mobile_phone);
 		$user_id = $this -> get_roleid($mobile_id, 'user_id');
 
 		if ($this -> check_existorder($user_id)) return false;
@@ -112,11 +112,11 @@ class Tx_order extends CI_Model {
 
 	}
 
-	function confirm_order($mobile_uuid, $order_id) {
+	function confirm_order($mobile_phone, $order_id) {
 
-		if (!$mobile_uuid || !$order_id) return false;
+		if (!$mobile_phone || !$order_id) return false;
 
-		$mobile_id = $this -> get_mobileid($mobile_uuid);
+		$mobile_id = $this -> get_mobileid($mobile_phone);
 		$taxi_id = $this -> get_roleid($mobile_id, 'taxi_id');
 
 		if (!$taxi_id) return false;
@@ -162,12 +162,12 @@ class Tx_order extends CI_Model {
 		return false;
 	}
 
-	function get_mobileid($mobile_uuid) {
+	function get_mobileid($mobile_phone) {
 
-		if (!$mobile_uuid) return false;
+		if (!$mobile_phone) return false;
 
-		$mobile_sql = 'SELECT mobile_id FROM `tx_mobile` WHERE mobile_uuid = ?';
-		$mobile_query = $this -> db -> query($mobile_sql, array($mobile_uuid));
+		$mobile_sql = 'SELECT mobile_id FROM `tx_mobile` WHERE mobile_phone = ?';
+		$mobile_query = $this -> db -> query($mobile_sql, array($mobile_phone));
 		
 		$mobile_result = $mobile_query -> result();
 
